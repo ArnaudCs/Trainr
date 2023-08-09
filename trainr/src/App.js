@@ -14,8 +14,14 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={<AuthGuard element={<Login />} />}
+          />
+          <Route
+            path="/register"
+            element={<AuthGuard element={<Register />} />}
+          />
           <Route
             path="/market"
             element={<AuthGuard element={<Market />} />}

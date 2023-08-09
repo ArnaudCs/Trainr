@@ -1,25 +1,50 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Link, IconButton, InputAdornment } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Link, IconButton, InputAdornment, Snackbar, Alert  } from '@mui/material';
 import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from 'axios'; // Import Axios
 
 function Register() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    age: '',
-    height: '',
-    weight: '',
+    name: '',
+    firstname: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
 
+  const [snackData, setSnackData] = useState({
+    message: '',
+    color: '',
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validEmail, setValidEmail] = useState(true); // New state for email validation
+  const [validPassword, setValidPassword] = useState(true); // New state for password validation
+  const [open, setOpen] = React.useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setSnackData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setValidEmail(emailRegex.test(value));
+    }
+
+    if (name === 'password') {
+      // Password should contain at least 8 characters, one uppercase letter, and one special character
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      setValidPassword(passwordRegex.test(value));
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   const handleShowPassword = () => {
@@ -30,10 +55,36 @@ function Register() {
     setShowConfirmPassword((prev) => !prev);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle registration logic here
-    console.log(formData);
+    if (!formData.password || !formData.confirmPassword || !formData.email || !formData.name || !formData.firstname) {
+      snackData.message = 'Veuillez remplir tous les champs';
+      snackData.color = 'error';
+      setOpen(true);
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:3000/register', formData);
+      console.log(response);
+      if(response.data.message === 'Utilisateur ajouté avec succès') {
+        snackData.message = 'Utilisateur ajouté avec succès';
+        snackData.color = 'success';
+        setOpen(true);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else if (response.data.message === 'Cet e-mail est déjà utilisé') {
+        snackData.message = 'Cet email est déjà utilisé';
+        snackData.color = 'error';
+        setOpen(true);
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    } 
   };
 
   return (
@@ -46,8 +97,8 @@ function Register() {
           <TextField
             fullWidth
             label="Prénom"
-            name="firstName"
-            value={formData.firstName}
+            name="firstname"
+            value={formData.firstname}
             onChange={handleChange}
             margin="normal"
             variant="outlined"
@@ -55,38 +106,8 @@ function Register() {
           <TextField
             fullWidth
             label="Nom"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Âge"
-            name="age"
-            type="number"
-            value={formData.age}
-            onChange={handleChange}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Taille (en cm)"
-            name="height"
-            type="number"
-            value={formData.height}
-            onChange={handleChange}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Poids (en kg)"
-            name="weight"
-            type="number"
-            value={formData.weight}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             margin="normal"
             variant="outlined"
@@ -99,6 +120,8 @@ function Register() {
             onChange={handleChange}
             margin="normal"
             variant="outlined"
+            error={!validEmail} // Set error state based on email validity
+            helperText={!validEmail ? 'Veuillez entrer une adresse e-mail valide' : ''}
           />
           <TextField
             fullWidth
@@ -110,7 +133,7 @@ function Register() {
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             InputProps={{
-              startAdornment: <Lock />,
+              startAdornment: <Lock style={{ marginRight: '5px' }}/>,
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowPassword} edge="end">
@@ -119,10 +142,10 @@ function Register() {
                 </InputAdornment>
               ),
             }}
-            error={formData.password && formData.password.length < 8}
+            error={formData.password && !validPassword}
             helperText={
-              formData.password && formData.password.length < 8
-                ? 'Le mot de passe doit contenir au moins 8 caractères'
+              formData.password && !validPassword
+                ? 'Le mot de passe doit contenir au moins 8 caractères, une majuscule et un caractère spécial'
                 : ''
             }
           />
@@ -136,7 +159,7 @@ function Register() {
             type={showConfirmPassword ? 'text' : 'password'}
             variant="outlined"
             InputProps={{
-              startAdornment: <Lock />,
+              startAdornment: <Lock style={{ marginRight: '5px' }}/>,
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowConfirmPassword} edge="end">
@@ -158,6 +181,11 @@ function Register() {
           Déjà un compte ? <Link href="/login">Se connecter</Link>
         </Typography>
       </Paper>
+      <Snackbar open={open} autoHideDuration={1000} onClose={handleClose} position="bottom-right" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleClose} severity={snackData.color} sx={{ width: '100%' }}>
+          {snackData.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
