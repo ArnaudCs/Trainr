@@ -6,6 +6,7 @@ import Register from './Components/Register';
 import Market from './Components/Market';
 import AuthGuard from './Components/Authguard'; // Importez le composant de garde de route
 import Navbar from './Components/Navbar'; // Importez le composant Navbar
+import './Components/CSS/App.css'; // Importez le fichier CSS
 
 function App() {
   return (

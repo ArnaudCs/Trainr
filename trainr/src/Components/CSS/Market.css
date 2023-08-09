@@ -1,0 +1,77 @@
+.Main {
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ItemCard{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 1em;
+    border-radius: 1em !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    color: white !important;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.ItemTitle{
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+}
+
+.ItemPhoto{
+    width: 10%;
+}
+
+.ItemDescription{
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+}
+
+.ItemCardHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ItemContainer{
+    width: 70%;
+}
+
+.PriceTag{
+    font-size: 2em;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 780px) {
+    .ItemCardHeader{
+        flex-direction: column;
+    }
+
+    .ItemCardPrice{
+        width: 50%;
+    }
+
+    .ItemCard{
+        justify-content: center;
+    }
+    
+    .ItemContainer{
+        width: 100%;
+    }
+
+    .PriceTag{
+        font-size: 3em;
+        font-weight: bold;
+        color: Green;
+    }    
+}

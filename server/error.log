@@ -1,0 +1,2 @@
+[2023-08-03T08:47:01.724Z] error: Erreur lors de l'envoi de l'e-mail : ENOENT: no such file or directory, open 'C:\Users\arnau\Desktop\FayatSoft\server\data\CommndeBéton.pdf'
+[2023-08-08T06:15:02.337Z] error: Erreur lors de l'envoi de l'e-mail : Data command failed: 421 4.3.0 Temporary System Problem.  Try again later (10). l7-20020a7bc347000000b003fbdbd0a7desm17075698wmj.27 - gsmtp
