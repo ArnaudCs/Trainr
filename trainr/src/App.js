@@ -14,7 +14,10 @@ function App() {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<AuthGuard element={<Home />} />}
+          />          
           <Route
             path="/login"
             element={<AuthGuard element={<Login />} />}

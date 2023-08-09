@@ -144,7 +144,7 @@ app.post('/login', (req, res) => {
             res.status(500).json({ success: false, message: 'Erreur lors de la connexion' });
           } else {
             if (result) {
-              const token = jwt.sign({ email: user.Email }, process.env.JWT_SECRET_KEY);
+              const token = jwt.sign({ email: email }, process.env.JWT_SECRET_KEY);
               res.json({ success: true, message: 'Connexion réussie', token: token });
             } else {
               res.json({ success: false, message: 'Identifiants incorrects' });
@@ -165,7 +165,8 @@ app.get('/user', (req, res) => {
       res.status(401).json({ success: false, message: 'Token invalide' });
     } else {
       const email = decodedToken.email;
-      const query = 'SELECT * FROM User WHERE Email = ?';
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
       connection.query(query, [email], (errQuery, results) => {
         if (errQuery) {
           logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
@@ -180,14 +181,12 @@ app.get('/user', (req, res) => {
               success: true,
               message: 'Informations utilisateur récupérées avec succès',
               user: {
+                userId: user.idUser,
                 name: user.Name,
-                firstName: user.FirstName,
-                email: user.Email,
-                userId: user.UserId,
-                phone: user.Phone,
-                isSuperAdmin: user.isSuperAdmin,
-                company: user.CompanyName
-                // Autres informations de l'utilisateur
+                firstName: user.Firstname,
+                email: user.Mail,
+                isAdmin: user.isAdmin,
+                points: user.Points,
               }
             });
           }

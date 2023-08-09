@@ -1,2 +1,10 @@
 [2023-08-03T08:47:01.724Z] error: Erreur lors de l'envoi de l'e-mail : ENOENT: no such file or directory, open 'C:\Users\arnau\Desktop\FayatSoft\server\data\CommndeBéton.pdf'
 [2023-08-08T06:15:02.337Z] error: Erreur lors de l'envoi de l'e-mail : Data command failed: 421 4.3.0 Temporary System Problem.  Try again later (10). l7-20020a7bc347000000b003fbdbd0a7desm17075698wmj.27 - gsmtp
+[2023-08-09T19:38:36.778Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:38:36.820Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:39:10.889Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:39:10.946Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:39:44.578Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:40:29.273Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:41:01.843Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T19:41:01.881Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'

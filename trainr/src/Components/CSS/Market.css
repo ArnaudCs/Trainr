@@ -1,23 +1,14 @@
 .Main {
     padding: 2em;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .ItemCard{
     margin-top: 1em;
     margin-bottom: 1em;
-    padding: 1em;
     border-radius: 1em !important;
     background: rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
     color: white !important;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
 }
 
 .ItemTitle{
@@ -26,8 +17,32 @@
     color: white;
 }
 
-.ItemPhoto{
-    width: 10%;
+.TitleDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pointDisplay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1em;
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    color: white !important;
+    padding: 0.5em;
+}
+
+.pointSold{
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
 }
 
 .ItemDescription{
@@ -44,12 +59,33 @@
 }
 
 .ItemContainer{
-    width: 70%;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.MuiButton-contained {
+    border-radius: 1em !important;
+    background-color: #b757cf;
+}
+
+.MuiButton-contained:hover {
+    background-color: #9f20bf;
 }
 
 .PriceTag{
     font-size: 2em;
     font-weight: bold;
+}
+
+.cardActions{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0.5em;
 }
 
 @media only screen and (max-width: 780px) {
@@ -63,6 +99,7 @@
 
     .ItemCard{
         justify-content: center;
+        flex-direction: column;
     }
     
     .ItemContainer{
@@ -74,4 +111,22 @@
         font-weight: bold;
         color: Green;
     }    
+
+    .ItemPhoto{
+        width: 80%;
+    }
+
+    .pointSold{
+        font-size: 1.5em;
+    }
+
+    .pointDisplay{
+        width: 100%;
+        padding: 0.1em;
+    }
+
+    .TitleDiv{
+        flex-direction: column;
+    }
+    
 }
