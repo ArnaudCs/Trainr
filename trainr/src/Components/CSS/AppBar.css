@@ -8,9 +8,9 @@
 }
 
 .NavBarLogo{
-    font-weight: bold;
-    font-size: 1.5em;
-    font-family: 'Nico Moji';
+    font-weight: bold !important;
+    font-size: 1.5em !important;
+    font-family: 'Nico Moji' !important;
 }
 
 .IconBar{

@@ -30,12 +30,12 @@ function Purchase() {
                 }
               })
                   .then(response => {
-                    console.log(response.data);
                     setPurchasedItems(response.data.recipes);
                     setIsLoading(false);
                   })
                   .catch(error => {
                     console.error('Erreur lors de la récupération du market :', error);
+                    setIsLoading(false);
                   });
           })
           .catch(error => {

@@ -45,6 +45,11 @@ function Market() {
       color: '',
   });
 
+  const [deleteData, setDeleteData] = useState({
+      idItem: '',
+      idUser: '',
+  });
+
   const [buyData, setBuyData] = useState({
       idUser: '',
       idItem: '',
@@ -66,6 +71,10 @@ function Market() {
       modifyName: item.Name,
       modifyDescription: item.Description,
       modifyPrice: item.Price,
+    });
+    setDeleteData({
+      idItem: item.idItem,
+      idUser: userInfos.userId,
     });
     setOpen(true);
   };
@@ -142,6 +151,31 @@ function Market() {
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const handleDelete = async () => {
+    const token = Cookies.get('token');
+    console.log(deleteData);
+    try {
+      const response = await axios.post('http://localhost:3000/delete-item', deleteData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log(response);
+      if (response.data.message === 'Item supprimé avec succès') {
+        setOpenSnack(true);
+        setSnackData({
+          message: 'Item supprimé avec succès, rechargement',
+          color: 'success',
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -234,6 +268,7 @@ function Market() {
         </Grid>
       </div>
 
+      {/* Buy dialog */}
       <Dialog
         open={openValidation}
         TransitionComponent={Transition}
@@ -241,8 +276,8 @@ function Market() {
         onClose={handleCloseBuy}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Valider l'achat ?"}</DialogTitle>
-        <DialogContent>
+        <DialogTitle style={{fontWeight: 700}}>{"Valider l'achat ?"}</DialogTitle>
+        <DialogContent >
           <DialogContentText id="alert-dialog-slide-description" className='dialogText'>
             Voulez-vous vraiment acheter "{selectedItem ? selectedItem.Name : null}" pour {selectedItem ? selectedItem.Price : null} Piggies ? Cette action est irréversible, aucun remboursement n'est possible.
           </DialogContentText>
@@ -251,14 +286,14 @@ function Market() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseBuy}>Annuler</Button>
-          <Button onClick={handleBuy}>Valider</Button>
+          <Button onClick={handleCloseBuy} variant='contained' color="error">Annuler</Button>
+          <Button onClick={handleBuy} variant='contained' color="success">Valider</Button>
         </DialogActions>
       </Dialog>
 
       {/* modification dialog */}
       <Dialog open={open} onClose={handleClose} className='Dialog'>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Modification de l'item</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {selectedItem ? selectedItem.Name : null}
@@ -298,8 +333,9 @@ function Market() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Annuler</Button>
-          <Button onClick={handleSubmit}>Modifier</Button>
+          <Button onClick={handleDelete} variant='contained' color="warning">Supprimer</Button>
+          <Button onClick={handleClose} variant='contained' color="error">Annuler</Button>
+          <Button onClick={handleSubmit} variant='contained' color="success">Modifier</Button>
         </DialogActions>
       </Dialog>
 

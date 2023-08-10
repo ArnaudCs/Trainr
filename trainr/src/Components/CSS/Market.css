@@ -92,7 +92,7 @@
     height: 100%;
     display: flex;
     justify-content: flex-end;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .priceDisplay{
@@ -107,6 +107,7 @@
     width: 20%;
     margin: 1em;
 }
+
 
 .priceDisplayElement{
     font-size: 2em;

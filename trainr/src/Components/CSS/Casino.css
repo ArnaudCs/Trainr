@@ -1,0 +1,19 @@
+.MainCasino{
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+.WheelContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-left: 3em;
+    padding-right: 3em;
+    margin-top: 2vh;
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 1em !important;
+    padding-bottom: 3vh;
+}

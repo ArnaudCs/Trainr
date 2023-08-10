@@ -5,6 +5,7 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import Purchase from './Components/Purchase';
 import Market from './Components/Market';
+import Casino from './Components/Casino';
 import AuthGuard from './Components/Authguard'; // Importez le composant de garde de route
 import Navbar from './Components/Navbar'; // Importez le composant Navbar
 import './Components/CSS/App.css'; // Importez le fichier CSS
@@ -34,6 +35,10 @@ function App() {
           <Route
             path="/purchase"
             element={<AuthGuard element={<Purchase />} />}
+          />
+          <Route
+            path="/casino"
+            element={<AuthGuard element={<Casino />} />}
           />
         </Routes>
       </div>

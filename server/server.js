@@ -233,6 +233,43 @@ app.post('/modify-item', (req, res) => {
   });
 }); //token verification
 
+app.post('/delete-item', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            if(results[0].isAdmin === 1){
+              const query = 'DELETE FROM MarketItem WHERE idItem = ?;';
+              connection.query(query, [req.body.idItem], (errQuery, results) => {
+                if (errQuery) {
+                  logger.error('Erreur lors de la suppression de l\'item :', errQuery);
+                  res.status(500).json({ success: false, message: 'Erreur lors de la suppression de l\'item' });
+                } else {
+                  res.json({ success: true, message: 'Item supprimé avec succès' });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
 app.post('/buy-item', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   
@@ -353,7 +390,7 @@ app.get('/get-recipes', (req, res) => {
                 res.status(500).json({ success: false, message: 'Erreur lors de la récupération des factures' });
               } else {
                 if (results.length === 0) {
-                  res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+                  res.status(404).json({ success: false, message: 'Aucune facture' });
                 } else {
                   res.json({ success: true, message: 'Factures récupérées avec succès', recipes: results });
                 }
