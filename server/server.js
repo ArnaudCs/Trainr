@@ -252,11 +252,12 @@ app.post('/buy-item', (req, res) => {
           if (results.length === 0) {
             res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
           } else {
+            const userInfos = results[0];
             if(results[0].isAdmin === 0){
               const idPurchase = null;
               const queryInsert = `INSERT INTO Purchase (idPurchase, idUser, Date, Price, idMarketItem)
                                   VALUES (?, ?, ?, ?, ?)`;
-              const valuesInsert = [idPurchase, req.body.idUser, req.body.date, req.body.idPrice, req.body.idItem];
+              const valuesInsert = [idPurchase, req.body.idUser, req.body.date, req.body.Price, req.body.idItem];
               connection.query(queryInsert, valuesInsert, (errInsert, resultsInsert) => {
                 if (errInsert) {
                   console.error('Erreur lors de l\'ajout de l\'achat :', errInsert);
@@ -268,6 +269,49 @@ app.post('/buy-item', (req, res) => {
                       logger.error('Erreur lors de la modification des points :', errQuery);
                       res.status(500).json({ success: false, message: 'Erreur lors de la modification des points' });
                     } else {
+                      const mailOptions = {
+                        from: 'Trainr',
+                        to: email,
+                        subject: 'Votre reçu d\'achat',
+                        text: `Bonjour ${userInfos.Firstname} ${userInfos.Name} ,
+                        \nMerci d'avoir effectué votre achat, vous avez commandé : 
+                        \n - ${req.body.itemName} : ${req.body.Price} points
+                        \nVotre nouveau solde est de : ${req.body.newSoldes} points
+                        
+                        \n\nL'équipe Trainr`,
+                      };
+      
+                      transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                          console.error('Erreur lors de l\'envoi de l\'e-mail :', error);
+                          res.status(500).json({ success: false, message: 'Erreur lors de l\'envoi de l\'e-mail de validation' });
+                        } else {
+                          console.log('Mail de validation envoyé :', info.response);
+                          res.json({ success: true, message: 'Mail de validation envoyé' });
+                        }
+                      });
+
+                      const mailOptionsAdmin = {
+                        from: 'Trainr',
+                        to: 'arnaud.cossu@gmail.com',
+                        subject: 'Nouvel achat effectué',
+                        text: `Bonjour, nouvel achat de ${userInfos.Firstname} ${userInfos.Name}
+                        \nAchat réalisé : 
+                        \n - ${req.body.itemName} : ${req.body.Price} points
+                        \nNouveau solde est de : ${req.body.newSoldes} points
+                        
+                        \n\nL'équipe Trainr`,
+                      };
+      
+                      transporter.sendMail(mailOptionsAdmin, (error, info) => {
+                        if (error) {
+                          console.error('Erreur lors de l\'envoi de l\'e-mail :', error);
+                          res.status(500).json({ success: false, message: 'Erreur lors de l\'envoi de l\'e-mail de validation' });
+                        } else {
+                          console.log('Mail de validation envoyé :', info.response);
+                          res.json({ success: true, message: 'Mail de validation envoyé' });
+                        }
+                      });
                       res.json({ success: true, message: 'Achat réalisé avec succès' });
                     }
                   });

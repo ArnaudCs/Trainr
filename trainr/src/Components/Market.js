@@ -75,8 +75,9 @@ function Market() {
     setBuyData({
       idUser: userInfos.userId,
       idItem: item.idItem,
-      idPrice: item.Price,
+      Price: item.Price,
       date: new Date(),
+      itemName: item.Name,
       newSoldes: userInfos.points - item.Price,
     });
     setOpenValidation(true);
