@@ -201,7 +201,13 @@ function Market() {
                       sx={{ height: '30vh' }}
                       image={item.Photo}
                       title="green iguana"
-                    />
+                    >
+                      <div className='priceImage'>
+                        <div className='priceDisplay'>
+                          <p className='priceDisplayElement'>{item.Price}</p>
+                        </div>
+                      </div>
+                    </CardMedia>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
                         {item.Name}

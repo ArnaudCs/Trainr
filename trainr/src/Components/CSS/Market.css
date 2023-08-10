@@ -87,6 +87,33 @@
     background-color: #9f20bf;
 }
 
+.priceImage{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+}
+
+.priceDisplay{
+    border-radius: 1em !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white !important;
+    aspect-ratio: 1 !important;
+    width: 20%;
+    margin: 1em;
+}
+
+.priceDisplayElement{
+    font-size: 2em;
+    font-weight: bold;
+    color: green  ;
+}
+
 .PriceTag{
     font-size: 2em;
     font-weight: bold;

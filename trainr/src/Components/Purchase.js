@@ -58,7 +58,7 @@ function Purchase() {
           <p className='pointPurchaseSold'>{userInfos.points}<SavingsTwoToneIcon style={{ marginLeft: '5px' }}></SavingsTwoToneIcon></p>
         </Card>
       </div>
-      <h2>Vous trouverez ici vos achats : </h2>
+      <h2>Vos achats récents : </h2>
       <div className='ItemContainer'>
             <TableContainer component={Paper} className='TablePurchase'>
                 <Table aria-label="simple table">
