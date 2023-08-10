@@ -6,17 +6,143 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import LoadingScreen from './LoadingScreen';
 import Grid from '@mui/material/Grid';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SavingsIcon from '@mui/icons-material/Savings';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Typography, TextField, Button, Snackbar, Alert  } from '@mui/material';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Market() {
   const [marketItems, setMarketItems] = useState([]);
   const [userInfos, setUserInfos] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Ajoutez l'état isLoading
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [openValidation, setOpenValidation] = React.useState(false);
+
+
+  const [modifyData, setModifyData] = useState({
+      idItem: '',
+      modifyName: '',
+      modifyDescription: '',
+      modifyPrice: '',
+  });
+
+  const [snackData, setSnackData] = useState({
+      message: '',
+      color: '',
+  });
+
+  const [buyData, setBuyData] = useState({
+      idUser: '',
+      idItem: '',
+      idPrice: '',
+      date: '',
+  });
+
+  const handleChange = (event) => {
+      const { name, value } = event.target;
+      setModifyData((prevData) => ({ ...prevData, [name]: value }));
+      setSnackData((prevData) => ({ ...prevData, [name]: value }));
+      setBuyData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleClickOpen = (item) => {
+    setSelectedItem(item);
+    setModifyData({
+      idItem: item.idItem,
+      modifyName: item.Name,
+      modifyDescription: item.Description,
+      modifyPrice: item.Price,
+    });
+    setOpen(true);
+  };
+  
+  const handleClickOpenBuy = (item) => {
+    setSelectedItem(item);
+    setBuyData({
+      idUser: userInfos.userId,
+      idItem: item.idItem,
+      idPrice: item.Price,
+      date: new Date(),
+      newSoldes: userInfos.points - item.Price,
+    });
+    setOpenValidation(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseBuy = () => {
+    setOpenValidation(false);
+  };
+
+  const handleSubmit = async () => {
+    const token = Cookies.get('token');
+
+    if(modifyData.modifyName !== '' && modifyData.modifyDescription !== '' && modifyData.modifyPrice !== '') {
+      try {
+        const response = await axios.post('http://localhost:3000/modify-item', modifyData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log(response);
+        if (response.data.message === 'Item modifié avec succès') {
+          setOpenSnack(true);
+          setSnackData({
+            message: 'Item modifié avec succès, rechargement',
+            color: 'success',
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleBuy = async () => {
+    const token = Cookies.get('token');
+
+    if(userInfos.points >= selectedItem.Price) {
+      try {
+        const response = await axios.post('http://localhost:3000/buy-item', buyData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log(response);
+        if (response.data.message === 'Achat réalisé avec succès') {
+          setOpenSnack(true);
+          setSnackData({
+            message: 'Achat réalisé avec succès, rechargement',
+            color: 'success',
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -87,13 +213,94 @@ function Market() {
                       </Typography>
                     </CardContent>
                     <CardActions className='cardActions'>
-                      <Button className='buyButton' startIcon={<ShoppingCartIcon />} variant='contained' size='large' >Acheter</Button>
+                      {!userInfos.isAdmin ? (
+                        <Button className='buyButton' disabled={userInfos.points < item.Price && userInfos.isAdmin === 0} startIcon={<ShoppingCartIcon />} variant='contained' size='large' onClick={() => handleClickOpenBuy(item)} >Acheter</Button>
+                      ) : null}
+
+                      {userInfos.isAdmin ? (
+                        <Button className='buyButton' startIcon={<EditIcon />} variant='contained' size='large' onClick={() => handleClickOpen(item)}>Modifier</Button>
+                      ) : null}
                     </CardActions>
                   </Card>
                 </Grid>
               ))}
         </Grid>
       </div>
+
+      <Dialog
+        open={openValidation}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseBuy}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Valider l'achat ?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description" className='dialogText'>
+            Voulez-vous vraiment acheter "{selectedItem ? selectedItem.Name : null}" pour {selectedItem ? selectedItem.Price : null} Piggies ? Cette action est irréversible, aucun remboursement n'est possible.
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-slide-description" className='dialogText'>
+            Après achat, votre solde sera de {selectedItem ? userInfos.points - selectedItem.Price : null} Piggies.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseBuy}>Annuler</Button>
+          <Button onClick={handleBuy}>Valider</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* modification dialog */}
+      <Dialog open={open} onClose={handleClose} className='Dialog'>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {selectedItem ? selectedItem.Name : null}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="modifyName"
+            onChange={handleChange}
+            value={modifyData.modifyName}
+            label="Nom de l'item"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="modifyDescription"
+            onChange={handleChange}
+            value={modifyData.modifyDescription}
+            label="Description de l'item"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="modifyPrice"
+            value={modifyData.modifyPrice}
+            label="Prix de l'item"
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Annuler</Button>
+          <Button onClick={handleSubmit}>Modifier</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar open={openSnack} autoHideDuration={1000} onClose={handleClose} position="bottom-right" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Alert onClose={handleClose} severity={snackData.color} sx={{ width: '100%' }}>
+              {snackData.message}
+          </Alert>
+      </Snackbar>
     </div>
   );
 }

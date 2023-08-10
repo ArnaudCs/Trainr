@@ -8,3 +8,5 @@
 [2023-08-09T19:40:29.273Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
 [2023-08-09T19:41:01.843Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
 [2023-08-09T19:41:01.881Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
+[2023-08-09T23:15:11.862Z] error: Erreur lors de la récupération des informations de l'utilisateur : read ECONNRESET
+[2023-08-09T23:15:11.875Z] error: Erreur lors de la récupération des informations de l'utilisateur : Cannot enqueue Query after fatal error.

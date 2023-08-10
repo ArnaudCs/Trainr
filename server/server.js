@@ -196,6 +196,131 @@ app.get('/user', (req, res) => {
   });
 }); //token verification
 
+app.post('/modify-item', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            if(results[0].isAdmin === 1){
+              const query = 'UPDATE MarketItem SET Name = ?, Description = ?, Price = ? WHERE idItem = ?';
+              connection.query(query, [req.body.modifyName, req.body.modifyDescription, req.body.modifyPrice, req.body.idItem], (errQuery, results) => {
+                if (errQuery) {
+                  logger.error('Erreur lors de la modification de l\'item :', errQuery);
+                  res.status(500).json({ success: false, message: 'Erreur lors de la modification de l\'item' });
+                } else {
+                  res.json({ success: true, message: 'Item modifié avec succès' });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
+app.post('/buy-item', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            if(results[0].isAdmin === 0){
+              const idPurchase = null;
+              const queryInsert = `INSERT INTO Purchase (idPurchase, idUser, Date, Price, idMarketItem)
+                                  VALUES (?, ?, ?, ?, ?)`;
+              const valuesInsert = [idPurchase, req.body.idUser, req.body.date, req.body.idPrice, req.body.idItem];
+              connection.query(queryInsert, valuesInsert, (errInsert, resultsInsert) => {
+                if (errInsert) {
+                  console.error('Erreur lors de l\'ajout de l\'achat :', errInsert);
+                  res.status(500).json({ success: false, message: 'Erreur lors de l\'ajout de l\'achat' });
+                } else {
+                  const query = 'UPDATE User SET Points = ? WHERE idUser = ?';
+                  connection.query(query, [req.body.newSoldes, req.body.idUser], (errQuery, results) => {
+                    if (errQuery) {
+                      logger.error('Erreur lors de la modification des points :', errQuery);
+                      res.status(500).json({ success: false, message: 'Erreur lors de la modification des points' });
+                    } else {
+                      res.json({ success: true, message: 'Achat réalisé avec succès' });
+                    }
+                  });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
+app.get('/get-recipes', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            const userId = results[0].idUser;
+
+            const query = 'SELECT MarketItem.Name, Purchase.* FROM Purchase, MarketItem WHERE Purchase.idMarketItem = MarketItem.idItem AND idUser = ? ORDER BY Purchase.Date DESC';
+            connection.query(query, [userId], (errQuery, results) => {
+              if (errQuery) {
+                logger.error('Erreur lors de la récupération des factures :', errQuery);
+                res.status(500).json({ success: false, message: 'Erreur lors de la récupération des factures' });
+              } else {
+                if (results.length === 0) {
+                  res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+                } else {
+                  res.json({ success: true, message: 'Factures récupérées avec succès', results: results });
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+}); //token verification
 
 app.get('/get-market', (req, res) => {
   const email = req.query.email;
