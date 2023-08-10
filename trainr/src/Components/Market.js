@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia';
 import LoadingScreen from './LoadingScreen';
 import Grid from '@mui/material/Grid';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SavingsIcon from '@mui/icons-material/Savings';
 import EditIcon from '@mui/icons-material/Edit';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,6 +17,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Typography, TextField, Button, Snackbar, Alert  } from '@mui/material';
 import Slide from '@mui/material/Slide';
+import SavingsTwoToneIcon from '@mui/icons-material/SavingsTwoTone';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -188,7 +188,7 @@ function Market() {
       <div className='TitleDiv'>
         <h1>Bienvenu dans la boutique </h1>
         <Card className='pointDisplay'>
-          <p className='pointSold'>{userInfos.points}<SavingsIcon style={{ marginLeft: '5px' }}></SavingsIcon></p>
+          <p className='pointSold'>{userInfos.points}<SavingsTwoToneIcon style={{ marginLeft: '5px' }}></SavingsTwoToneIcon></p>
         </Card>
       </div>
       <h2>Faites vous plaisir ... </h2>

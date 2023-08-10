@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import Purchase from './Components/Purchase';
 import Market from './Components/Market';
 import AuthGuard from './Components/Authguard'; // Importez le composant de garde de route
 import Navbar from './Components/Navbar'; // Importez le composant Navbar
@@ -29,6 +30,10 @@ function App() {
           <Route
             path="/market"
             element={<AuthGuard element={<Market />} />}
+          />
+          <Route
+            path="/purchase"
+            element={<AuthGuard element={<Purchase />} />}
           />
         </Routes>
       </div>

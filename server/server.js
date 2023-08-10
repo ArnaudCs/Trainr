@@ -355,7 +355,7 @@ app.get('/get-recipes', (req, res) => {
                 if (results.length === 0) {
                   res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
                 } else {
-                  res.json({ success: true, message: 'Factures récupérées avec succès', results: results });
+                  res.json({ success: true, message: 'Factures récupérées avec succès', recipes: results });
                 }
               }
             });

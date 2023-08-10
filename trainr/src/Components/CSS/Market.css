@@ -33,7 +33,6 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
     color: white !important;
     padding: 0.5em;
-    aspect-ratio: 1;
 }
 
 .Dialog{
@@ -100,6 +99,12 @@
     margin: 0.5em;
 }
 
+@media only screen and (min-width: 828px) {
+    .pointDisplay{
+        aspect-ratio: 1 !important;
+    }
+}
+
 @media only screen and (max-width: 780px) {
     .ItemCardHeader{
         flex-direction: column;
@@ -135,6 +140,7 @@
     .pointDisplay{
         width: 100%;
         padding: 0.1em;
+        max-height: 20%;
     }
 
     .TitleDiv{

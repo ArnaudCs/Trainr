@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';  
 import IconButton from '@mui/material/IconButton';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import HistoryIcon from '@mui/icons-material/History';
 import './CSS/AppBar.css'; // Importez le fichier CSS
@@ -23,29 +22,24 @@ function Navbar() {
   return (
     <AppBar position="static" className='navBar'>
       <Toolbar>
-        <Typography variant="h6" component={Link} to="/" style={{ textDecoration: 'none', color: 'white' }}>
+        <Typography variant="h6" component={Link} to="/" style={{ textDecoration: 'none', color: 'white' }} className='NavBarLogo'>
           TrainR
         </Typography>
         <div style={{ flexGrow: 1 }}></div>
         {isAuthenticated && (
           <IconButton aria-label="delete" size="large" component={Link} to="/market">
-            <LocalGroceryStoreIcon></LocalGroceryStoreIcon>
+            <LocalGroceryStoreIcon className='IconBar'></LocalGroceryStoreIcon>
           </IconButton>
         )}
         {!isAuthenticated && ( <Button color="inherit" component={Link} to="/login">Se connecter</Button>)}
         {isAuthenticated && (
-          <IconButton aria-label="delete" size="large" component={Link} to="/profile">
-            <AccountBoxIcon></AccountBoxIcon>
-          </IconButton>
-        )}
-        {isAuthenticated && (
-          <IconButton aria-label="delete" size="large" component={Link} to="/profile">
-            <HistoryIcon></HistoryIcon>
+          <IconButton aria-label="delete" size="large" component={Link} to="/purchase">
+            <HistoryIcon className='IconBar'></HistoryIcon>
           </IconButton>
         )}
         {isAuthenticated && (
           <IconButton aria-label="delete" size="large" onClick={handleLogout}>
-            <MeetingRoomIcon></MeetingRoomIcon>
+            <MeetingRoomIcon className='IconBar'></MeetingRoomIcon>
           </IconButton>
         )}
       </Toolbar>

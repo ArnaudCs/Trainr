@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Paper, Typography, TextField, Button, Link, IconButton, InputAdornment, Snackbar, Alert  } from '@mui/material';
 import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios'; // Import Axios
+import './CSS/Register.css'; // Importez le fichier CSS
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -89,8 +90,8 @@ function Register() {
 
   return (
     <Container maxWidth="sm" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <Paper elevation={3} sx={{ padding: 3, width: '100%', maxWidth: 400 }}>
-        <Typography variant="h4" align="center" gutterBottom>
+      <Paper elevation={3} sx={{ padding: 3, width: '100%', maxWidth: 400, backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: '1em'  }}>
+        <Typography variant="h4" align="center" gutterBottom className='registerElement'>
           Inscription
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -102,6 +103,18 @@ function Register() {
             onChange={handleChange}
             margin="normal"
             variant="outlined"
+            InputProps={{
+              style: {
+                color: 'white',
+                borderColor: 'white'  
+              },
+              inputMode: 'numeric'  
+            }}
+            labelProps={{
+              style: {
+                color: 'white'  // Couleur de l'étiquette
+              }
+            }}
           />
           <TextField
             fullWidth
@@ -111,6 +124,18 @@ function Register() {
             onChange={handleChange}
             margin="normal"
             variant="outlined"
+            InputProps={{
+              style: {
+                color: 'white',
+                borderColor: 'white'  
+              },
+              inputMode: 'numeric'  
+            }}
+            labelProps={{
+              style: {
+                color: 'white'  // Couleur de l'étiquette
+              }
+            }}
           />
           <TextField
             fullWidth
@@ -122,6 +147,18 @@ function Register() {
             variant="outlined"
             error={!validEmail} // Set error state based on email validity
             helperText={!validEmail ? 'Veuillez entrer une adresse e-mail valide' : ''}
+            InputProps={{
+              style: {
+                color: 'white',
+                borderColor: 'white'  
+              },
+              inputMode: 'numeric'  
+            }}
+            labelProps={{
+              style: {
+                color: 'white'  // Couleur de l'étiquette
+              }
+            }}
           />
           <TextField
             fullWidth
@@ -133,11 +170,15 @@ function Register() {
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             InputProps={{
-              startAdornment: <Lock style={{ marginRight: '5px' }}/>,
+              style: {
+                color: 'white',
+                borderColor: 'white'  
+              },
+              startAdornment: <Lock style={{ marginRight: '5px', color: 'white' }}/>,
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowPassword} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <VisibilityOff className='IconRegister'/> : <Visibility className='IconRegister'/>}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -159,11 +200,15 @@ function Register() {
             type={showConfirmPassword ? 'text' : 'password'}
             variant="outlined"
             InputProps={{
-              startAdornment: <Lock style={{ marginRight: '5px' }}/>,
+              style: {
+                color: 'white',
+                borderColor: 'white'  
+              },
+              startAdornment: <Lock style={{ marginRight: '5px', color: 'white' }}/>,
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowConfirmPassword} edge="end">
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    {showConfirmPassword ? <VisibilityOff className='IconRegister'/> : <Visibility className='IconRegister'/>}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -173,7 +218,7 @@ function Register() {
               formData.confirmPassword !== formData.password ? 'Les mots de passe ne correspondent pas' : ''
             }
           />
-          <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }} type="submit">
+          <Button fullWidth variant="contained" className='registerBtn' sx={{ mt: 2 }} type="submit">
             S'inscrire
           </Button>
         </form>
