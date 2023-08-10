@@ -29,7 +29,7 @@ function Casino() {
         console.error('Erreur lors de la récupération du market :', error);
       });
     }
-  }, [userInfos]);
+  }, []);
   
   return (
     <div className='MainCasino'>

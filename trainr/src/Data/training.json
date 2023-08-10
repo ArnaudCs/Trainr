@@ -1,0 +1,30 @@
+[
+  {
+    "nom": "Squats",
+    "muscles": "Jambes",
+    "importance": "Très Importante",
+    "series": "4",
+    "reps": "10"
+  },
+  {
+    "nom": "Levée de jambes",
+    "muscles": "Jambes, Abdos",
+    "importance": "Importante",
+    "series": "4",
+    "reps": "10"
+  },
+  {
+    "nom": "Planches",
+    "muscles": "Abdos, Bras, Epaules",
+    "importance": "Très Importante",
+    "series": "4",
+    "reps": "25s"
+  },
+  {
+    "nom": "Jumping Jacks",
+    "muscles": "Jambes, Abdos, Bras, Epaules",
+    "importance": "Importante",
+    "series": "4",
+    "reps": "20s"
+  }
+]

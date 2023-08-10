@@ -403,6 +403,74 @@ app.get('/get-recipes', (req, res) => {
   });
 }); //token verification
 
+app.get('/get-programs', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            const userId = results[0].idUser;
+
+            const query = 'SELECT * FROM Program';
+            connection.query(query, (errQuery, programResults) => {
+              if (errQuery) {
+                logger.error('Erreur lors de la récupération des programmes :', errQuery);
+                res.status(500).json({ success: false, message: 'Erreur lors de la récupération des programmes' });
+              } else {
+                if (programResults.length === 0) {
+                  res.status(404).json({ success: false, message: 'Aucun programme' });
+                } else {
+                  const programs = [];
+
+                  programResults.forEach(program => {
+                    const programObj = {
+                      idProg: program.idProg,
+                      Name: program.Name,
+                      Photo: program.Photo,
+                      Price: program.Points,
+                      Type: program.Type,
+                      Description: program.Description,
+                      exercises: []
+                    };
+
+                    const exercisesQuery = 'SELECT * FROM Exercices WHERE idProg = ?';
+                    connection.query(exercisesQuery, [program.idProg], (errQuery, exerciseResults) => {
+                      if (errQuery) {
+                        logger.error('Erreur lors de la récupération des exercices :', errQuery);
+                      } else {
+                        programObj.exercises = exerciseResults;
+                      }
+
+                      programs.push(programObj);
+
+                      if (programs.length === programResults.length) {
+                        res.json({ success: true, message: 'Programmes récupérés avec succès', programs });
+                      }
+                    });
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
 app.get('/get-market', (req, res) => {
   const email = req.query.email;
 
