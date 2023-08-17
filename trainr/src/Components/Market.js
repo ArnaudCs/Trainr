@@ -249,9 +249,6 @@ function Market() {
                       <Typography variant="body2">
                         {item.Description}
                       </Typography>
-                      <Typography variant="body2">
-                        {item.Price}
-                      </Typography>
                     </CardContent>
                     <CardActions className='cardActions'>
                       {!userInfos.isAdmin ? (

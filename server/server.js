@@ -362,6 +362,76 @@ app.post('/buy-item', (req, res) => {
   });
 }); //token verification
 
+app.post('/add-session', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            const userInfos = results[0];
+            if(results[0].isAdmin === 0){
+              const idPurchase = null;
+              const queryInsert = `INSERT INTO Session (idSession, idUser, idProg, Date, PointsEarned)
+                                  VALUES (?, ?, ?, ?, ?)`;
+              const valuesInsert = [idPurchase, req.body.idUser, req.body.idProg, req.body.date, req.body.price];
+              connection.query(queryInsert, valuesInsert, (errInsert, resultsInsert) => {
+                if (errInsert) {
+                  console.error('Erreur lors de l\'ajout de la session :', errInsert);
+                  res.status(500).json({ success: false, message: 'Erreur lors de l\'ajout de la session' });
+                } else {
+                  const query = 'UPDATE User SET Points = ? WHERE idUser = ?';
+                  connection.query(query, [req.body.newSoldes, req.body.idUser], (errQuery, results) => {
+                    if (errQuery) {
+                      logger.error('Erreur lors de la modification des points :', errQuery);
+                      res.status(500).json({ success: false, message: 'Erreur lors de la modification des points' });
+                    } else {
+                      const mailOptionsAdmin = {
+                        from: 'Trainr',
+                        to: 'arnaud.cossu@gmail.com',
+                        subject: 'Nouvelle session effectuée',
+                        text: `Bonjour, nouvelle session de ${userInfos.Firstname} ${userInfos.Name}
+                        \nSession réalisé : 
+                        \n - ${req.body.progName} : ${req.body.price} points
+                        \nNouveau solde est de : ${req.body.newSoldes} points
+                        
+                        \n\nL'équipe Trainr`,
+                      };
+      
+                      transporter.sendMail(mailOptionsAdmin, (error, info) => {
+                        if (error) {
+                          console.error('Erreur lors de l\'envoi de l\'e-mail :', error);
+                          res.status(500).json({ success: false, message: 'Erreur lors de l\'envoi de l\'e-mail de validation' });
+                        } else {
+                          console.log('Mail de validation envoyé :', info.response);
+                          res.json({ success: true, message: 'Mail de validation envoyé' });
+                        }
+                      });
+                      res.json({ success: true, message: 'Session ajoutée avec succès' });
+                    }
+                  });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
 app.get('/get-recipes', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   
@@ -403,6 +473,47 @@ app.get('/get-recipes', (req, res) => {
   });
 }); //token verification
 
+app.get('/get-sessions', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+    if (err) {
+      console.error('Erreur lors de la vérification du token :', err);
+      res.status(401).json({ success: false, message: 'Token invalide' });
+    } else {
+      const email = decodedToken.email;
+
+      const query = 'SELECT * FROM User WHERE Mail = ?';
+      connection.query(query, [email], (errQuery, results) => {
+        if (errQuery) {
+          logger.error('Erreur lors de la récupération des informations de l\'utilisateur :', errQuery);
+          res.status(500).json({ success: false, message: 'Erreur lors de la récupération des informations de l\'utilisateur' });
+        } else {
+          if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+          } else {
+            const userId = results[0].idUser;
+
+            const query = 'SELECT Program.Name, Session.* FROM Program, Session WHERE Session.idProg = Program.idProg AND idUser = ? ORDER BY Session.Date DESC';
+            connection.query(query, [userId], (errQuery, results) => {
+              if (errQuery) {
+                logger.error('Erreur lors de la récupération des sessions :', errQuery);
+                res.status(500).json({ success: false, message: 'Erreur lors de la récupération des sessions' });
+              } else {
+                if (results.length === 0) {
+                  res.status(404).json({ success: false, message: 'Aucune session' });
+                } else {
+                  res.json({ success: true, message: 'Sessions récupérées avec succès', sessions: results });
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+}); //token verification
+
 app.get('/get-programs', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   
@@ -431,7 +542,7 @@ app.get('/get-programs', (req, res) => {
                 res.status(500).json({ success: false, message: 'Erreur lors de la récupération des programmes' });
               } else {
                 if (programResults.length === 0) {
-                  res.status(404).json({ success: false, message: 'Aucun programme' });
+                  res.status(404).json({ success: false, message: 'Aucun programme', programs: [] });
                 } else {
                   const programs = [];
 
@@ -440,7 +551,7 @@ app.get('/get-programs', (req, res) => {
                       idProg: program.idProg,
                       Name: program.Name,
                       Photo: program.Photo,
-                      Price: program.Points,
+                      Price: program.Price,
                       Type: program.Type,
                       Description: program.Description,
                       exercises: []

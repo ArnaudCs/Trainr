@@ -10,3 +10,7 @@
 [2023-08-09T19:41:01.881Z] error: Erreur lors de la récupération des informations de l'utilisateur : ER_BAD_FIELD_ERROR: Unknown column 'Email' in 'where clause'
 [2023-08-09T23:15:11.862Z] error: Erreur lors de la récupération des informations de l'utilisateur : read ECONNRESET
 [2023-08-09T23:15:11.875Z] error: Erreur lors de la récupération des informations de l'utilisateur : Cannot enqueue Query after fatal error.
+[2023-08-17T21:01:42.530Z] error: Erreur lors de la récupération des programmes : ER_NO_SUCH_TABLE: Table 'sql7640549.Program' doesn't exist
+[2023-08-17T21:01:42.589Z] error: Erreur lors de la récupération des programmes : ER_NO_SUCH_TABLE: Table 'sql7640549.Program' doesn't exist
+[2023-08-17T21:02:02.359Z] error: Erreur lors de la récupération des programmes : ER_NO_SUCH_TABLE: Table 'sql7640549.Program' doesn't exist
+[2023-08-17T21:02:02.422Z] error: Erreur lors de la récupération des programmes : ER_NO_SUCH_TABLE: Table 'sql7640549.Program' doesn't exist
