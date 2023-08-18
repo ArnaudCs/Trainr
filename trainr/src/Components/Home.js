@@ -8,7 +8,7 @@ import CardMedia from '@mui/material/CardMedia';
 import { Typography, Button, Snackbar, Alert } from '@mui/material';
 import LoadingScreen from './LoadingScreen';
 import Grid from '@mui/material/Grid';
-import './CSS/Home.css'; // Importez le fichier CSS
+import './CSS/Home.css';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -140,8 +140,8 @@ function Home() {
           <LoadingScreen /> // Affichez le composant de chargement lorsque isLoading est true
         ) : null}
       </div>
-      <h1>Bonjour {userInfos.firstName} {userInfos.name}, prêt pour votre séance ? </h1>
-      <h3>Vos programmes : </h3>
+      <h1>Bonjour {userInfos.firstName} {userInfos.name}, prêt(e) pour votre séance ? </h1>
+      <h2>Vos programmes : </h2>
 
       {noProg ? (
       <h3>Aucun programme pour le moment ..</h3>) :
@@ -157,7 +157,7 @@ function Home() {
                     >
                       <div className='priceImage'>
                         <div className='priceDisplay'>
-                          <p className='priceDisplayElement'>{item.Price}</p>
+                          <p className='priceDisplayElement'>+{item.Price}</p>
                         </div>
                       </div>
                     </CardMedia>
@@ -196,9 +196,9 @@ function Home() {
         <DialogContent >
           <DialogContentText id="alert-dialog-slide-description" className='dialogText'>
             Voulez-vous vraiment valider "{selectedItem ? selectedItem.Name : null}" pour gagner {selectedItem ? selectedItem.Price : null} Piggies ? Cette action est irréversible, vous êtes responsable et comprenez qu'une fause déclaration donnera droit à un retrait de points supplémentaires.
-          </DialogContentText>
+          </DialogContentText>  
           <DialogContentText id="alert-dialog-slide-description" className='dialogText'>
-            Après achat, votre solde sera de {selectedItem ? userInfos.points + selectedItem.Price : null} Piggies.
+            Après validation, votre solde sera de {selectedItem ? userInfos.points + selectedItem.Price : null} Piggies.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

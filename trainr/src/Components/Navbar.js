@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import HistoryIcon from '@mui/icons-material/History';
-import CasinoIcon from '@mui/icons-material/Casino';
 import SportsIcon from '@mui/icons-material/Sports';
 import './CSS/AppBar.css'; // Importez le fichier CSS
 
@@ -43,12 +42,7 @@ function Navbar() {
           <IconButton aria-label="delete" size="large" component={Link} to="/sessions">
             <SportsIcon className='IconBar'></SportsIcon>
           </IconButton>
-        )}
-        {isAuthenticated && (
-          <IconButton aria-label="delete" size="large" component={Link} to="/casino">
-            <CasinoIcon className='IconBar'></CasinoIcon>
-          </IconButton>
-        )}
+        )}   
         {isAuthenticated && (
           <IconButton aria-label="delete" size="large" onClick={handleLogout}>
             <MeetingRoomIcon className='IconBar'></MeetingRoomIcon>
