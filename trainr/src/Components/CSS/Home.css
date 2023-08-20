@@ -7,3 +7,16 @@
 .ItemContainer{
     margin-bottom: 15vh;
 }
+
+.exeContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1vh;
+    padding-left: 1em;
+    padding-right: 1em;
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 1em !important;
+}

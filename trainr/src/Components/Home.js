@@ -170,7 +170,9 @@ function Home() {
                       </Typography>
                       <Typography variant="body2">
                           {item.exercises.map(exercise => (
-                            <p key={exercise.idExercise}>{exercise.Name} - Series : {exercise.Series} - Reps : {exercise.Reps}</p>
+                            <div className='exeContainer'>
+                              <p key={exercise.idExercise}>{exercise.Name} - Series : {exercise.Series} - Reps : {exercise.Reps}</p>
+                            </div>
                           ))}
                       </Typography>
                     </CardContent>
